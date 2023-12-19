@@ -5,7 +5,7 @@ import functools
 
 filename = './inputs/day07_camel_cards.in'
 
-def foo(s):
+def get_hands(s):
     hand, bet = s.split()
     return (hand, int(bet))
 
@@ -88,6 +88,6 @@ if __name__ == '__main__':
     with open(filename, 'r') as f:
         lines = f.readlines()
 
-    hands = list(map(foo, lines))
+    hands = list(map(get_hands, lines))
     part_one(hands)
     part_two(hands)

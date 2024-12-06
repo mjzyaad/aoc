@@ -2,7 +2,6 @@ from collections import Counter
 
 filename = './inputs/day01.in'
 
-
 lsA = []
 lsB = []
 with open(filename, 'r') as f:

@@ -12,7 +12,7 @@ def discover_grid(grid, guard_position, new_obstacle):
 
     visit_states = set()
     positions = { guard_position }
-    fall_out = False
+    has_cycle = True
     while (guard_position, direction_index) not in visit_states:
         visit_states.add((guard_position, direction_index))
         positions.add(guard_position)
@@ -23,14 +23,14 @@ def discover_grid(grid, guard_position, new_obstacle):
         tmpC = c + deltaC
 
         if tmpR < 0 or tmpR >= len(grid) or tmpC < 0 or tmpC >= len(grid[0]):
-            fall_out = True
+            has_cycle = False
             break
         elif grid[tmpR][tmpC] == '#' or new_obstacle == (tmpR, tmpC):    #   turn clockwise
             direction_index = (direction_index + 1) % 4
         else:
             guard_position = (tmpR, tmpC)
     
-    return (positions, fall_out)
+    return (positions, has_cycle)
 
 
 filename = './inputs/day06.in'
@@ -39,14 +39,14 @@ with open(filename, 'r') as f:
     guard_position = get_guard_position(grid)
 
     # Part A
-    discovered_positions, fall_out = discover_grid(grid, guard_position, (-1,-1))
+    discovered_positions, has_cycle = discover_grid(grid, guard_position, (-1,-1))
     print(len(discovered_positions))
 
     # Part B
     obstacle_count = 0
     for new_obstacle in discovered_positions:
         if new_obstacle != guard_position:
-            _, fall_out = discover_grid(grid, guard_position, new_obstacle)
-            obstacle_count += not fall_out
+            _, has_cycle = discover_grid(grid, guard_position, new_obstacle)
+            obstacle_count += has_cycle
 
     print(obstacle_count)

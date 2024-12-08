@@ -16,9 +16,9 @@ if __name__ == '__main__':
     with open(filename, 'r') as f:
         for s in f.readlines():
             #   Extract input
-            ls_num = list(map(int, s.replace(':', '').split(' ')))
-            target = ls_num[0]
-            numbers = ls_num[1:]
+            numbers = list(map(int, s.replace(':', '').split(' ')))
+            target = numbers[0]
+            numbers = numbers[1:]
 
             #   Check if we can reach the target calculation
             #   replace concatenation '||' with '' to be used with eval

@@ -27,22 +27,17 @@ def fence_perimeter(R, C, plot):
                 perimeter += 1
     return perimeter
 
-# +-+-+-+-+
-# |A A A A|
-# +-+-+-+-+     +-+
-#               |D|
-# +-+-+   +-+   +-+
-# |B B|   |C|
-# +   +   + +-+
-# |B B|   |C C|
-# +-+-+   +-+ +
-#           |C|
-# +-+-+-+   +-+
-# |E E E|
-# +-+-+-+
-
 def plot_sides(R, C, plant, plot):
+    # Number of sides = number of corners.
     # How to detect a corner on a grid?
+    # For a particular grid cell, there are are 2 types of corners:
+    #   - inner corner
+    #   - outer corner
+    # To detect an inner corner, a cell should have 0 cells of same type in its horizontal and vertical directions
+    # To detect an outer corner, a cell should have:
+    #   - 2 cells in both horizontal and vertical directions
+    #   - No cell in its diagonal
+
     # N, NE, E, SE, S, SW, W, NW
     corners = [(-1,0), (-1,+1), (0,+1), (+1,+1), (+1,0), (+1,-1), (0,-1), (-1,-1), (-1,0)]
     
@@ -52,12 +47,10 @@ def plot_sides(R, C, plant, plot):
             deltas = corners[i * 2 : i * 2 +3]
             is_inner_corner = False
             is_outer_corner = False
-            hv_inner = 0
-            diag_inner = 0
-            hv_outer = 0
-            diag_outer = 0
-            for j, d in enumerate(deltas):
-                dr, dc = d
+            hv_inner, diag_inner = 0, 0
+            hv_outer, diag_outer = 0, 0
+            for j, delta in enumerate(deltas):
+                dr, dc = delta
                 new_r = r + dr
                 new_c = c + dc
 
@@ -70,21 +63,13 @@ def plot_sides(R, C, plant, plot):
 
             is_inner_corner |= hv_inner == 0
             is_outer_corner |= hv_outer == 2 and diag_outer == 0
-
-            if is_inner_corner == True or is_outer_corner == True:
-                print(f'Plant {plant} : ({r},{c}) is a corner.  Inner corner = {is_inner_corner} [{hv_inner}, {diag_inner}], Outer corner = {is_outer_corner}. Deltas = {deltas}')
-
             vertices += (is_inner_corner or is_outer_corner)
-
-    print(f'Region {plant} with {vertices} sides.')
 
     return vertices
 
 R = len(g)
 C = len(g[0])
-plots = []
-solA = 0
-solB = 0
+solA, solB = 0, 0
 for i in range(R):
     for j in range(C):
         if (i, j) not in visited:
@@ -92,11 +77,8 @@ for i in range(R):
             dfs(R, C, g[i][j], i, j, plot)
             area = len(plot)
             perimeter = fence_perimeter(R, C, plot)
-            # print(f'A region of {g[i][j]} plants with price {area} * {perimeter} = {area * perimeter}.')
-            plots.append(plot)
-            solA += area * perimeter
-            # print(plot)
             sides = plot_sides(R, C, g[i][j], plot)
+            solA += area * perimeter
             solB += area * sides
 
 print(f'Solution to part A = {solA}')

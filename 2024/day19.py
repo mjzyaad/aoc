@@ -18,7 +18,11 @@ def make_pattern(pattern):
     return r
 
 sol_a = 0
+sol_b = 0
 for p in patterns:
-    sol_a += make_pattern(p)
+    r = make_pattern(p)
+    sol_a += r > 0
+    sol_b += r
 
 print(sol_a)
+print(sol_b)
